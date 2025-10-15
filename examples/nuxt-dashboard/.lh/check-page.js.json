@@ -1,0 +1,18 @@
+{
+    "sourceFile": "check-page.js",
+    "activeCommit": 0,
+    "commits": [
+        {
+            "activePatchIndex": 0,
+            "patches": [
+                {
+                    "date": 1760553801840,
+                    "content": "Index: \n===================================================================\n--- \n+++ \n"
+                }
+            ],
+            "date": 1760553801840,
+            "name": "Commit-0",
+            "content": "import { chromium } from 'playwright';\n\nasync function checkPage() {\n  const browser = await chromium.launch({ headless: false });\n  const page = await browser.newPage();\n  \n  // Listen for console messages\n  page.on('console', msg => {\n    console.log(`[CONSOLE ${msg.type().toUpperCase()}] ${msg.text()}`);\n  });\n  \n  // Listen for page errors\n  page.on('pageerror', error => {\n    console.log(`[PAGE ERROR] ${error.message}`);\n  });\n  \n  // Listen for request failures\n  page.on('requestfailed', request => {\n    console.log(`[REQUEST FAILED] ${request.url()} - ${request.failure().errorText}`);\n  });\n  \n  try {\n    console.log('Navigating to http://localhost:3001...');\n    await page.goto('http://localhost:3001', { waitUntil: 'networkidle' });\n    \n    console.log('\\n=== PAGE TITLE ===');\n    console.log(await page.title());\n    \n    console.log('\\n=== PAGE CONTENT (first 1000 chars) ===');\n    const content = await page.content();\n    console.log(content.substring(0, 1000));\n    \n    console.log('\\n=== CHECKING FOR ERRORS ===');\n    const errors = await page.evaluate(() => {\n      const errors = [];\n      // Check for any error elements\n      const errorElements = document.querySelectorAll('[class*=\"error\"], [id*=\"error\"]');\n      errorElements.forEach(el => {\n        errors.push(`Error element found: ${el.tagName} - ${el.textContent?.substring(0, 100)}`);\n      });\n      return errors;\n    });\n    \n    if (errors.length > 0) {\n      console.log('Found error elements:', errors);\n    } else {\n      console.log('No obvious error elements found');\n    }\n    \n    console.log('\\n=== WAITING FOR CONSOLE MESSAGES ===');\n    await page.waitForTimeout(3000);\n    \n  } catch (error) {\n    console.error('Error checking page:', error.message);\n  } finally {\n    await browser.close();\n  }\n}\n\ncheckPage().catch(console.error);\n"
+        }
+    ]
+}
