@@ -1,0 +1,22 @@
+{
+  "schema": "sa2a-diataxis/v1",
+  "repository": "seanchatmangpt/ai",
+  "role": "product",
+  "authority": [
+    "engineering-standards/semantic/sa2a-diataxis"
+  ],
+  "generator": "ggen-marketplace/packs/sa2a-diataxis-pack",
+  "capabilities": [
+    "ai"
+  ],
+  "depends_on": [
+    "xaas",
+    "ash_a2a",
+    "graphlaw"
+  ],
+  "generated_paths": [
+    ".sa2a/bootstrap",
+    ".sa2a/manifest.json",
+    ".sa2a/diataxis.ttl"
+  ]
+}
